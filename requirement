@@ -1,0 +1,91 @@
+Student Management & Attendance System
+Technology
+Node.js
+Express.js
+MySQL
+REST API
+JWT Authentication
+Postman for API testing
+Modules
+1. Admin Login
+Admin registration/login
+JWT authentication
+Password hashing using bcrypt
+Logout
+2. Student Management
+Add student
+Update student
+Delete student
+Get student by ID
+List students
+Search by name/email/mobile
+3. Course Management
+Add course
+Update course
+Delete course
+List courses
+Assign students to courses
+4. Attendance
+Mark attendance
+Update attendance
+Get attendance by student
+Get attendance by date
+Calculate attendance percentage
+
+5. Dashboard Create an API that returns:
+{
+  "totalStudents": 150,
+  "totalCourses": 8,
+  "todayPresent": 120,
+  "todayAbsent": 30
+}
+
+Suggested MySQL Tables
+users
+students
+courses
+student_courses
+attendance
+Important Relationships
+
+users
+  |
+  | admin
+
+students
+   |
+   |---< student_courses >---|
+                             |
+                          courses
+
+students
+   |
+   |---< attendance
+   
+Required REST APIs
+Method     API      Purpose
+POST /api/auth/login Admin login
+POST /api/students Add student
+GET /api/students Get all students
+GET /api/students/:id Get student
+PUT /api/students/:id  Update student 
+DELETE /api/students/:id Delete student
+POST /api/courses Add course
+GET /api/courses Get courses
+POST /api/attendance Mark attendance
+GET /api/attendance/student/:id Student attendance
+GET /api/dashboard Dashboard statistics
+
+ implementations:
+ 
+Proper MVC folder structure
+Express Router
+MySQL database connection
+Input validation
+Error handling middleware
+JWT authentication
+Password encryption
+Pagination
+Search and filtering
+SQL JOIN queries
+profile Pic upload
