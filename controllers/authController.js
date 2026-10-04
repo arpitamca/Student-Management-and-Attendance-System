@@ -12,7 +12,7 @@ module.exports= {
             });
         }
         const{username, email, password} = req.body;
-        connection.query('Select * from users where email = ?', [email], async(err, result)=>{
+        connection.query ('Select * from users where email = ?', [email], async(err, result)=>{
         if(err){
             res.send({error: true, message: err.message});   
         }
@@ -47,16 +47,24 @@ module.exports= {
         }
         connection.query(`Select * from users where email = ?`,[email], (err,result) => {
             if(err){
-                res.send({error: true, message: err.message});
-            }else{
-                let isSame=bcrypt.compareSync(password, result[0].password);
-                let token = jwt.sign({id:result[0].id, email:result[0].email}, 'secret',{algorithm:'HS256', expiresIn: '12h'});
-                if(isSame){
-                    res.send({error:false, message:"user logged in"});
-                }else{
-                    res.send("Login Failed");
-                }
+                return res.send({error: true, message: err.message});
             }
+            // Check whether user exists
+            if (result.length === 0) {
+                return res.status(404).send({
+                error: true,
+                message: "No user exists with this email"
+                });
+            }    
+           
+            let isSame=bcrypt.compareSync(password, result[0].password);
+            if(isSame){
+                let token = jwt.sign({id:result[0].id, email:result[0].email}, 'secret',{algorithm:'HS256', expiresIn: '12h'});
+                return res.send({error:false, message:"user logged in", token});
+            }else{
+                return res.send("Login Failed");
+            }
+            
 
         })
     }

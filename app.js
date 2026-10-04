@@ -5,6 +5,7 @@ var cookieParser = require('cookie-parser');
 var logger = require('morgan'); //logger middleware
 const db = require('./database/mysql.database'); 
 const authRouter = require('./routes/authRoutes');
+const studentsRouter = require('./routes/studentsRoutes');
 
 var indexRouter = require('./routes/index');
 var usersRouter = require('./routes/users');
@@ -24,6 +25,7 @@ app.use(express.static(path.join(__dirname, 'public')));
 app.use('/', indexRouter);
 app.use('/users', usersRouter);
 app.use('/auth', authRouter);
+app.use('/api/students', studentsRouter);
 
 
 module.exports = app;

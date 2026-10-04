@@ -11,7 +11,7 @@ Modules
 Admin registration/login
 JWT authentication
 Password hashing using bcrypt
-Logout
+? Logout
 2. Student Management
 Add student
 Update student
