@@ -6,6 +6,9 @@ var logger = require('morgan'); //logger middleware
 const db = require('./database/mysql.database'); 
 const authRouter = require('./routes/authRoutes');
 const studentsRouter = require('./routes/studentsRoutes');
+const coursesRouter = require('./routes/courseRoutes');
+const attendanceRoutes = require("./routes/attendanceRoutes");
+const dashboardRoutes = require("./routes/dashboardRoutes");
 
 var indexRouter = require('./routes/index');
 var usersRouter = require('./routes/users');
@@ -26,6 +29,11 @@ app.use('/', indexRouter);
 app.use('/users', usersRouter);
 app.use('/auth', authRouter);
 app.use('/api/students', studentsRouter);
+app.use('/api/courses', coursesRouter);
+app.use("/api/attendance", attendanceRoutes);
+app.use("/api/attendance", attendanceRoutes);
+app.use("/api/dashboard", dashboardRoutes);
+
 
 
 module.exports = app;

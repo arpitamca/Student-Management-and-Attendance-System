@@ -1,25 +1,74 @@
+const fs = require('fs');
+const csv = require('csv-parser');
 const connection = require("../database/mysql.database");
 const { validationResult } = require("express-validator");
 
 module.exports = {
-    validate:(req,res)=>{
+
+     importStudents: (req, res) => {
+
+        if (!req.file) {
+            return res.status(400).json({
+                error: true,
+                message: 'CSV file is required'
+            });
+        }
+
+        const students = [];
+
+        fs.createReadStream(req.file.path)
+            .pipe(csv())
+            .on('data', (row) => {
+                students.push([
+                    "default-profile.png",
+                    row.name,
+                    row.roll_no,
+                    row.email,
+                    row.phone,
+                    row.semester
+                ]);
+            })
+            .on('end', () => {
+
+                const sql = `
+                    INSERT INTO students
+                    (profile_pic, name, roll_no, email, phone, semester)
+                    VALUES ?
+                `;
+
+                connection.query(sql, [students], (err, result) => {
+
+                    // delete uploaded CSV after processing
+                    fs.unlinkSync(req.file.path);
+
+                    if (err) {
+                        return res.status(500).json({
+                            error: true,
+                            message: err.message
+                        });
+                    }
+
+                    return res.status(201).json({
+                        error: false,
+                        message: 'Students imported successfully',
+                        totalStudents: result.affectedRows
+                    });
+                });
+            });
+    },
+
+    addStudent: (req, res) => {
+        let { name, roll_no, email, phone, semester } = req.body;
+        let profile_pic = "default-profile.png";
+        if(req.file){
+            profile_pic = req.file.filename;
+        }
         let result = validationResult(req);
         if (!result.isEmpty()) {
             return res.status(400).json({
                 errors: result.array()
             });
         }
-    },
-    
-    addStudent: (req, res) => {
-        let { name, roll_no, email, phone, semester } = req.body;
-        //let result = validationResult(req);
-        //if (!result.isEmpty()) {
-        //    return res.status(400).json({
-        //        errors: result.array()
-        //    });
-        //}
-        this.validate(req,res);
         
         connection.query(`Select * from students where roll_no = ?`, [roll_no], (err, result) => {
             if (err) {

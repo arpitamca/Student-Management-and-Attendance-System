@@ -1,9 +1,21 @@
 var express = require('express');
 var router = express.Router();
+const multer = require('multer');
 const studentsController = require('../controllers/studentsController');
 const{body, param}= require('express-validator');
 
-router.post('/',[        //Use the exact path that was already provided by app.js.
+const upload = multer ({
+    dest : 'uploads/'
+});
+
+router.post(
+    '/import',
+    upload.single('file'),
+    studentsController.importStudents
+);
+
+router.post('/', upload.single("profile_pic"),        //Use the exact path that was already provided by app.js.
+    [
     body("name")
         .trim()
         .notEmpty()
